@@ -23,6 +23,34 @@ public class AuthorDAO {
     public AuthorDAO(AuthorVO vo) {
         this.vo = vo;
     }
+    
+    public ArrayList<AuthorVO>  selectAll() {
+        String sql = "select * from Author order by name";
+        
+        ArrayList<AuthorVO> authorList = new ArrayList<AuthorVO>();
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.execute();
+            rs = stmt.getResultSet();
+            
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                
+                AuthorVO author = new AuthorVO(id, name);
+                authorList.add(author);
+            }
+        } catch(SQLException ex) {
+            throw new RuntimeException("Erro na conexão: ", ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+        return authorList;
+    }
 
     public ArrayList<BookVO> fillWithAuthors (ArrayList<BookVO> bookList) {
         
@@ -59,9 +87,5 @@ public class AuthorDAO {
         }
         ConnectionFactory.closeConnection(con, stmt, rs);
         return bookList;
-    }
-    
-    public AuthorVO getVo() {
-        return vo;
     }
 }

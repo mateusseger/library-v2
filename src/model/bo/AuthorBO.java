@@ -5,6 +5,7 @@
  */
 package model.bo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import model.dao.AuthorDAO;
 import model.vo.AuthorVO;
@@ -21,18 +22,14 @@ public class AuthorBO {
     
     public AuthorBO(AuthorVO vo) {
         this.vo = vo;
-        this.dao = new AuthorDAO(vo);
+        dao = new AuthorDAO(vo);
+    }
+    
+    public ArrayList<AuthorVO> getAuthors() throws SQLException {
+        return dao.selectAll();
     }
     
     public ArrayList<BookVO> fillWithAuthors (ArrayList<BookVO> bookList) {
-        return this.getDao().fillWithAuthors(bookList);
-    }
-
-    public AuthorVO getVo() {
-        return vo;
-    }
-
-    public AuthorDAO getDao() {
-        return dao;
-    }
+        return dao.fillWithAuthors(bookList);
+    }   
 }

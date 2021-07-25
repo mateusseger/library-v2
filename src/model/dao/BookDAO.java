@@ -28,7 +28,7 @@ public class BookDAO {
         String sql = "select b.id, b.title, e.number, e.year"
                    + "  from Book b inner join Edition e"
                    + "    on b.id = e.fk_book_id"
-                   + "    order by b.title, e.number";
+                   + "    order by b.title, e.number desc";
         
         ArrayList<BookVO> bookList = new ArrayList<BookVO>();
         Connection con = ConnectionFactory.getConnection();
@@ -56,12 +56,90 @@ public class BookDAO {
         }
         return bookList;
     }
-
-    public BookVO getVo() {
-        return vo;
+    
+    public void deleteEdition(int id, int edition) {
+        String sql = "delete from Edition where fk_book_id = ? and number = ?";
+        
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.setInt(2, edition);
+            
+            stmt.execute();
+        } catch(SQLException ex) {
+            throw new RuntimeException("Erro na conexão: ", ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
     }
-
-    public void setVo(BookVO vo) {
-        this.vo = vo;
+    
+    public boolean invalidBook(int id) {
+        String sql = "select * from Book b inner join Edition e on b.id = e.fk_book_id where b.id = ?";
+        
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean invalidBook = false;
+                
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            
+            stmt.execute();
+            rs = stmt.getResultSet();
+            
+            invalidBook = !rs.next();
+            
+        } catch(SQLException ex) {
+            throw new RuntimeException("Erro na conexão: ", ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+            return invalidBook;
+        }
+    }
+    
+    public void deleteBook(int id) {
+        // deleta relacionamento com autor
+        deleteBookAuthor(id);
+        
+        // deleta livro
+        String sql = "delete from Book b where b.id = ?";
+        
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+                
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            
+            stmt.execute();
+            
+        } catch(SQLException ex) {
+            throw new RuntimeException("Erro na conexão: ", ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+    }
+    
+    public void deleteBookAuthor(int id) {
+        String sql = "delete from Book_Author ba where ba.fk_book_id = ?";
+        
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement stmt = null;
+                
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            
+            stmt.execute();
+            
+        } catch(SQLException ex) {
+            throw new RuntimeException("Erro na conexão: ", ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
     }
 }

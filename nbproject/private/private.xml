@@ -5,8 +5,8 @@
         <group>
             <file>file:/Users/mateusseger/NetBeansProjects/library/src/view/BookView.java</file>
             <file>file:/Users/mateusseger/NetBeansProjects/library/src/main/Library.java</file>
-            <file>file:/Users/mateusseger/NetBeansProjects/library/src/model/dao/BookDAO.java</file>
-            <file>file:/Users/mateusseger/NetBeansProjects/library/src/view/MainMenu.java</file>
+            <file>file:/Users/mateusseger/NetBeansProjects/library/src/controller/BookViewCO.java</file>
+            <file>file:/Users/mateusseger/NetBeansProjects/library/src/controller/MainMenuCO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -20,16 +20,11 @@ public class Library {
     }
     
     private void showMainMenu() {
-        this.getMainMenu().setVisible(true);
+        mainMenu.setVisible(true);
     }
     
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         Library library = new Library();
         library.showMainMenu();  
-    }
-
-    public MainMenu getMainMenu() {
-        return mainMenu;
     }
 }

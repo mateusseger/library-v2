@@ -8,7 +8,6 @@ package model.bo;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import model.dao.BookDAO;
-import model.vo.AuthorVO;
 import model.vo.BookVO;
 
 /**
@@ -17,39 +16,23 @@ import model.vo.BookVO;
  */
 public class BookBO {
 
-    private final BookVO bookVO;
-    private final BookDAO bookDAO;
-    private final AuthorVO authorVO;
-    private final AuthorBO authorBO;
+    private final BookVO vo;
+    private final BookDAO dao;
     
     public BookBO(BookVO vo) {
-        this.bookVO = vo;
-        this.bookDAO = new BookDAO(vo);
-        this.authorVO = new AuthorVO();
-        this.authorBO = new AuthorBO(authorVO);
+        this.vo = vo;
+        dao = new BookDAO(vo);
     }
 
     public ArrayList<BookVO> getCatalog() throws SQLException {       
-        // obtem os livros
-        ArrayList<BookVO> bookList = this.getBookDAO().selectAll();
-        
-        // obtem os autores dos livros e retorna a lista
-        return this.getAuthorBO().fillWithAuthors(bookList);
+        return dao.selectAll();       
     }
     
-    public BookVO getBookVO() {
-        return bookVO;
-    }
-
-    public BookDAO getBookDAO() {
-        return bookDAO;
-    }
-
-    public AuthorVO getAuthorVO() {
-        return authorVO;
-    }
-
-    public AuthorBO getAuthorBO() {
-        return authorBO;
+    public void deleteBook(int id, int edition) {
+        dao.deleteEdition(id, edition);
+        // valida se o livro se encontra sem edicao, caso verdadeiro realiza a exclusão do livro e do vinculo com autor(es)
+        if (dao.invalidBook(id)) {
+            dao.deleteBook(id);
+        }
     }
 }

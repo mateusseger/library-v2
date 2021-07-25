@@ -21,14 +21,9 @@ public class MainMenuCO {
     }
     
     public void registerBook() {
-        System.out.println("Estou na tela de cadastro de livro");
-        
         // criar um novo BookView
         BookView bookView = new BookView(new JFrame(), true);
         bookView.setVisible(true);
-        
-        // cria um controller para o BookView
-        BookViewCO bookViewCO = new BookViewCO(bookView);
     }
     
     public void registerAuthor() {
@@ -36,11 +31,6 @@ public class MainMenuCO {
     }
     
     public void closeApp() {
-        System.out.println("Fechando a aplicação");
         System.exit(0);
-    }
-
-    public MainMenu getView() {
-        return view;
     }
 }

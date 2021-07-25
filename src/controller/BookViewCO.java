@@ -22,40 +22,47 @@ public class BookViewCO {
     private final BookView view;
     private final BookVO bookVO;
     private final BookBO bookBO;
+    private final AuthorVO authorVO;
+    private final AuthorBO authorBO;
     
     public BookViewCO(BookView view) {
         this.view = view;
-        this.bookVO = new BookVO();
-        this.bookBO = new BookBO(bookVO);
+        bookVO = new BookVO();
+        bookBO = new BookBO(bookVO);
+        
+        authorVO = new AuthorVO();
+        authorBO = new AuthorBO(authorVO);
     }
     
-    public void consultCatalog() {
-        System.out.println("Estou na consulta de catalogo");
-        
-        // obtem lista de livros
+    public void getAuthors() { 
         try {
-            ArrayList<BookVO> bookList = this.getBookBO().getCatalog();  
-            // popula a tabela
-            view.viewJTable(bookList);
+            // obtem os autores
+            ArrayList<AuthorVO> authorList = authorBO.getAuthors(); 
+            // popula o combobox
+            view.fillAuthorComboBox(authorList);
         } catch(SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
     
+    public void consultCatalog() {
+        try {
+            // obtem os livros
+            ArrayList<BookVO> bookList = bookBO.getCatalog(); 
+            // obtem os autores dos livros e retorna a lista
+            bookList = authorBO.fillWithAuthors(bookList);
+            // popula a tabela
+            view.fillBookTable(bookList);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+  
+    public void deleteBook(int id, int edition) {
+        bookBO.deleteBook(id, edition);
+    }
+    
     public void backToTheMainMenu() {
-        this.getView().setVisible(false);
-    }
-
-    public BookView getView() {
-        return view;
-    }
-
-    public BookVO getBookVO() {
-        return bookVO;
-    }
-
-    public BookBO getBookBO() {
-        return bookBO;
+        view.setVisible(false);
     }
 }
